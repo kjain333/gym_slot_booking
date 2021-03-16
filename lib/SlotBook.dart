@@ -14,11 +14,13 @@ class SlotBook extends StatefulWidget{
     return _SlotBook();
   }
 }
-List<String> slots = ["6:00 - 7:00","7:00 - 8:00","8:00 - 9:00","15:00 - 16:00","16:00 - 17:00","17:00 - 18:00","18:00 - 19:00","19:00 - 20:00","20:00 - 21:00","21:00 - 22:00"];
+List<String> slots = ["5:00 - 6:00","6:00 - 7:00","7:00 - 8:00","8:00 - 9:00","9:00 - 10:00","10:00 - 11:00","11:00 - 12:00","12:00 - 13:00","13:00 - 14:00","14:00 - 15:00","15:00 - 16:00","16:00 - 17:00","17:00 - 18:00","18:00 - 19:00","19:00 - 20:00","20:00 - 21:00","21:00 - 22:00"];
 class _SlotBook extends State<SlotBook>{
   int available = -1;
   int seatLeft = 0;
   bool loading = true;
+  int maxStud;
+  List<dynamic> slotExist;
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<void> addData() async {
     CollectionReference slot = FirebaseFirestore.instance.collection('gymSlots');
@@ -50,7 +52,7 @@ class _SlotBook extends State<SlotBook>{
         DocumentSnapshot bookedSlots = await documentReference.get();
         if(bookedSlots.data()!=null && bookedSlots.data().containsKey("users"))
         {
-          if(bookedSlots.get("users").length>=15)
+          if(bookedSlots.get("users").length>=maxStud)
           {
             Fluttertoast.showToast(msg: "Sorry slots have been filled!");
           }
@@ -90,58 +92,90 @@ class _SlotBook extends State<SlotBook>{
   Future<void> fetchData() async {
     DateTime time = DateTime.now();
     print(time.toString());
+    if(time.hour==4&&time.minute>=30)
+    {
+      available = 0;
+    }
     if(time.hour==5&&time.minute>=30)
-      {
-        available = 0;
-      }
-    else if(time.hour==6&&time.minute>=30)
       {
         available = 1;
       }
+    else if(time.hour==6&&time.minute>=30)
+      {
+        available = 2;
+      }
     else if(time.hour==7&&time.minute>=30)
-    {
-      available = 2;
-    }
-    else if(time.hour==14&&time.minute>=30)
     {
       available = 3;
     }
-    else if(time.hour==15&&time.minute>=30)
+    else if(time.hour==8&&time.minute>=30)
     {
       available = 4;
     }
-    else if(time.hour==16&&time.minute>=30)
+    else if(time.hour==9&&time.minute>=30)
     {
       available = 5;
     }
-    else if(time.hour==17&&time.minute>=30)
+    else if(time.hour==10&&time.minute>=30)
     {
       available = 6;
     }
-    else if(time.hour==18&&time.minute>=30)
+    else if(time.hour==11&&time.minute>=30)
     {
       available = 7;
     }
-    else if(time.hour==19&&time.minute>=30)
+    else if(time.hour==12&&time.minute>=30)
     {
       available = 8;
     }
-    else if(time.hour==20&&time.minute>=30)
+    else if(time.hour==13&&time.minute>=30)
     {
       available = 9;
+    }
+    else if(time.hour==14&&time.minute>=30)
+    {
+      available = 10;
+    }
+    else if(time.hour==15&&time.minute>=30)
+    {
+      available = 11;
+    }
+    else if(time.hour==16&&time.minute>=30)
+    {
+      available = 12;
+    }
+    else if(time.hour==17&&time.minute>=30)
+    {
+      available = 13;
+    }
+    else if(time.hour==18&&time.minute>=30)
+    {
+      available = 14;
+    }
+    else if(time.hour==19&&time.minute>=30)
+    {
+      available = 15;
+    }
+    else if(time.hour==20&&time.minute>=30)
+    {
+      available = 16;
     }
     CollectionReference slot = FirebaseFirestore.instance.collection('gymSlots');
     String dataString = time.day.toString()+time.month.toString()+time.year.toString()+available.toString();
     DocumentReference documentReference = slot.doc(dataString);
     DocumentSnapshot bookedSlots = await documentReference.get();
+    DocumentSnapshot general = await slot.doc("generalData").get();
+    maxStud = general.get("maxStudents");
+    slotExist = general.get("slots");
     if(bookedSlots.data()!=null && bookedSlots.data().containsKey("users"))
       {
-        seatLeft = 15 - bookedSlots.get("users").length;
+        seatLeft = maxStud - bookedSlots.get("users").length;
       }
     else
       {
-        seatLeft = 15;
+        seatLeft = maxStud;
       }
+    clicked = false;
     setState(() {
       loading = false;
     });
@@ -179,7 +213,7 @@ class _SlotBook extends State<SlotBook>{
               ),
               Column(
                 children: slots.map((e){
-                  return ListTile(
+                  return (!slotExist[slots.indexOf(e)])?Container():ListTile(
                     enabled: (available==slots.indexOf(e)),
                     title: Text(e,style: TextStyle(fontWeight: FontWeight.w300,fontSize: 16),),
                     trailing: (available==slots.indexOf(e))?GestureDetector(
@@ -198,7 +232,7 @@ class _SlotBook extends State<SlotBook>{
               ),
               RaisedButton(
                 onPressed: (){
-                  if(seatLeft>0&&available!=-1)
+                  if(seatLeft>0&&available!=-1&&clicked)
                     {
                       setState(() {
                         loading = true;
