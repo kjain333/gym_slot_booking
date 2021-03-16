@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>677563175529-b5j5vop58c6fou6k22envtriopvheda3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.677563175529-b5j5vop58c6fou6k22envtriopvheda3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>677563175529-9qdb77t29b2doc75psn0qc66g228l93d.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyANFJSCFPwuH8y-xb-TXWpq7oOyHAIA5ek</string>
+	<key>GCM_SENDER_ID</key>
+	<string>677563175529</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.gymSlotBooking</string>
+	<key>PROJECT_ID</key>
+	<string>cricket-club-iitg-aa3e3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cricket-club-iitg-aa3e3.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:677563175529:ios:52e80a83bcbd0f650448f8</string>
+	<key>DATABASE_URL</key>
+	<string>https://cricket-club-iitg-aa3e3.firebaseio.com</string>
+</dict>
+</plist>
