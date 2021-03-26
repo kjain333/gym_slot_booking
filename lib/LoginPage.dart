@@ -56,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                 try{
                   await oauth.login();
                 }catch(err){
+                  print(err);
                   Fluttertoast.showToast(msg: "Please allow permission");
                   setState(() {
                     loading = false;
@@ -69,12 +70,14 @@ class _LoginPageState extends State<LoginPage> {
                       headers: {HttpHeaders.authorizationHeader: accessToken});
                   var data = jsonDecode(response.body);
                   print(data['displayName']);
-                  await _auth.createUserWithEmailAndPassword(email: data['mail'], password: data['surname']).catchError((err){
-                    _auth.signInWithEmailAndPassword(email: data['mail'], password: data['surname']);
+                  print(data['surname']);
+                  await _auth.createUserWithEmailAndPassword(email: data['mail'], password: (data['surname']==null||(data['surname']!=null&&data['surname'].length<=6))?data['mail']:data['surname']).catchError((err){
+                    print(err);
+                    _auth.signInWithEmailAndPassword(email: data['mail'], password: (data['surname']==null||(data['surname']!=null&&data['surname'].length<=6))?data['mail']:data['surname']);
                   });
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.setString("name", data['displayName']);
-                  prefs.setString("roll", data['surname']);
+                  prefs.setString("roll", (data['surname']==null)?data['mail']:data['surname']);
                   prefs.setString("email",data['mail']);
                   setState(() {
                     login = true;
@@ -86,7 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                   });
                   Fluttertoast.showToast(msg: "Login failed! Please try again later.");
                 }
-
               },
               title: Text("LOGIN with IITG EMAIL"),
               trailing: (login)?Icon(Icons.check_box,color: Colors.red,):Icon(Icons.arrow_forward_ios),
@@ -96,8 +98,12 @@ class _LoginPageState extends State<LoginPage> {
                 setState(() {
                   loading = true;
                 });
-                PermissionStatus data = await Permission.storage.request();
-                print(data);
+                PermissionStatus data = PermissionStatus.granted;
+                if(Platform.isAndroid||Platform.isIOS)
+                  {
+                    data = await Permission.storage.request();
+                    print(data);
+                  }
                 if(data==PermissionStatus.denied)
                   {
                     Fluttertoast.showToast(msg: "Please allow permission");
@@ -147,6 +153,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () async {
                 if(login==true&&picture==true)
                   {
+                    //login, image, name, roll, email
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setBool("login",true);
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>SlotBook()));
