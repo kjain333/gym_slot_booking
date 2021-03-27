@@ -1,0 +1,31 @@
+os: osx
+language: generic
+before_script:
+  - brew update
+  - brew install --HEAD usbmuxd
+  - brew unlink usbmuxd
+  - brew link usbmuxd
+  - brew install --HEAD libimobiledevice
+  - brew install ideviceinstaller
+  - brew install ios-deploy
+  - git clone https://github.com/flutter/flutter.git -b beta --depth 1
+script:
+  - flutter/bin/flutter build ios --debug --no-codesign
+cache:
+  directories:
+    - $HOME/.pub-cache
+before_deploy:
+  - pushd build/ios/iphoneos
+  - mkdir Payload
+  - cd Payload
+  - ln -s ../Runner.app
+  - cd ..
+  - zip -r app.ipa Payload
+  - popd
+deploy:
+  provider: releases
+  api_key: "A2UD+F8hlEPq6eGvTxMyVBuCamwXGnBgM7+IjliNwik+s0A++wXFq3/60kqNedhwWJvcq3DzkZ6H8a8OuYcCQutBH9f/AQBSL1uYoK+5O7+R4xnLvxACudpMcTTy/LVGm92LrTPq34q52QgYFKMzaA6svBtU5tTYLt8l9nLBgvC+HE6RAxw2C/QmAxtNhginCYXA9CNO9vRRxMGy5J8iDpvOYu5UKM368TRfrBAKXPeU1RG4nxSOjNNz61DQu4HEUbRHS0T3MBRMc+dWSWwcnwcfwDb9dRsRLl6Ilq2YRjehBhTQl+F6dS3G2U//M2EU6JbLWdBf/qc7NMNAqDlzlGLjN8goFjTRjH/LLBQnxX6RAAXYexIs+lxC9TqYEHJ8KddnFCaI/DaGh6L2bSAjoBjh9TvycPb4lEykzQ1ARDcFHY/ZvZNiV/UznLC0TPsVz+vvJPaoack6I0FBiaWfDzCrNYw98zngu1wXXBDVbnv7w125srb/qVhbFxU4CwZRiypbEtbRGiBHva/XPRBftJjtmCM4S+0J2d9aRhgY5gsUdbR+yw3l/WK535lwSx6qM/uyJQVp58XKQ/S54B1VEd11N9WebarrGH+44eF3c4HDjnyNEtwghJn89grumJjA/w/yPLJ0/OiImA45tjztVk9M6ThgnXJ0MheSXcFgegE="
+  file: build/ios/iphoneos/app.ipa
+  skip_cleanup: true #important or your built app would be deleted
+  on:
+    repo: kjain333/gym_slot_booking #your repo will be here
