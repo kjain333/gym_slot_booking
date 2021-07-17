@@ -1,7 +1,7 @@
 # gym_slot_booking
 
-A web portal to enable students from IIT Guwahati to book gym slots at specific slots to restrict entry during the COVID pandemic.
-View the portal at: https://sportsiitg.github.io/
+- A web portal to enable students from IIT Guwahati to book gym slots at specific slots to restrict entry during the COVID pandemic.
+- View the portal at: https://sportsiitg.github.io/
 
 ## Getting Started
 
